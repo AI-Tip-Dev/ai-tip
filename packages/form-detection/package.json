@@ -1,0 +1,23 @@
+{
+  "name": "@ai-tip/form-detection",
+  "version": "0.1.0",
+  "description": "AI Tip form field detection — DOM scanning, label inference, field filling",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src/"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.5.0",
+    "vitest": "^2.0.0",
+    "happy-dom": "^15.0.0"
+  }
+}

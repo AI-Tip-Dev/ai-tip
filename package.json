@@ -1,0 +1,11 @@
+{
+  "name": "ai-tip",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm --filter @ai-tip/desktop dev",
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "pnpm -r lint"
+  }
+}

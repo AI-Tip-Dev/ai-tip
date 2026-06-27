@@ -1,0 +1,16 @@
+node_modules
+dist
+out
+.DS_Store
+.eslintcache
+*.log*
+.env
+.env.local
+.env.*.local
+*.env
+
+# Playwright e2e
+test-results/
+playwright-report/
+e2e/report/
+e2e/.last-run.json

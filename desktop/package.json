@@ -1,0 +1,81 @@
+{
+  "name": "electron-ai-sidebar",
+  "version": "1.0.0",
+  "description": "AI-powered intelligent form-filling assistant — load any webpage, AI analyzes forms, searches your private knowledge base, and assists filling with your approval",
+  "main": "./out/main/index.js",
+  "author": {
+    "name": "Electron AI Sidebar Contributors"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/electron-ai-sidebar/electron-ai-sidebar",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/electron-ai-sidebar/electron-ai-sidebar"
+  },
+  "keywords": [
+    "electron",
+    "vue",
+    "typescript",
+    "ai",
+    "sidebar",
+    "form-filling",
+    "knowledge-base",
+    "rag",
+    "llm",
+    "desktop-app"
+  ],
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "scripts": {
+    "dev": "chcp 65001 >nul 2>&1 && electron-vite dev",
+    "start": "electron-vite preview",
+    "build": "npm run typecheck && electron-vite build",
+    "postinstall": "electron-builder install-app-deps",
+    "build:unpack": "npm run build && electron-builder --dir",
+    "build:win": "npm run build && electron-builder --win",
+    "build:mac": "npm run build && electron-builder --mac",
+    "build:linux": "npm run build && electron-builder --linux",
+    "lint": "eslint --cache .",
+    "format": "prettier --write .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "npx playwright test --config=e2e/playwright.config.ts",
+    "test:e2e:debug": "npx playwright test --config=e2e/playwright.config.ts --debug",
+    "typecheck": "npm run typecheck:node && npm run typecheck:web",
+    "typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
+    "typecheck:web": "vue-tsc --noEmit -p tsconfig.web.json --composite false"
+  },
+  "dependencies": {
+    "@electron-toolkit/preload": "^3.0.2",
+    "@electron-toolkit/utils": "^4.0.0",
+    "electron-log": "^5.4.4",
+    "electron-updater": "^6.8.9"
+  },
+  "devDependencies": {
+    "@ai-tip/llm-providers": "workspace:*",
+    "@ai-tip/observability": "workspace:*",
+    "@ai-tip/sdk": "workspace:*",
+    "@electron-toolkit/eslint-config-prettier": "3.0.0",
+    "@electron-toolkit/eslint-config-ts": "^3.1.0",
+    "@electron-toolkit/tsconfig": "^2.0.0",
+    "@playwright/test": "^1.61.1",
+    "@types/node": "^26.0.1",
+    "@vitejs/plugin-vue": "^6.0.7",
+    "@vue/test-utils": "^2.4.11",
+    "electron": "^42.5.0",
+    "electron-builder": "^26.15.3",
+    "electron-vite": "^5.0.0",
+    "eslint": "^10.5.0",
+    "eslint-plugin-vue": "^10.9.2",
+    "jsdom": "^29.1.1",
+    "prettier": "^3.8.4",
+    "typescript": "^6.0.3",
+    "vite": "^8.1.0",
+    "vitest": "^4.1.9",
+    "vue": "^3.5.38",
+    "vue-eslint-parser": "^10.4.1",
+    "vue-tsc": "^3.3.5"
+  }
+}

@@ -1,0 +1,113 @@
+:root {
+  /* ============================================================
+     Professional Color System
+     ============================================================ */
+
+  /* Brand Colors */
+  --app-blue:        #003d8f;
+  --app-blue-dark:   #002855;
+  --app-blue-light:  #00529e;
+  --app-blue-pale:   #e8f0fe;
+  --app-blue-ring:   rgba(0, 61, 143, 0.15);
+
+  /* Neutrals */
+  --app-white:       #ffffff;
+  --app-gray-50:     #f8f9fa;
+  --app-gray-100:    #f1f3f5;
+  --app-gray-200:    #e2e5e9;
+  --app-gray-300:    #ced4da;
+  --app-gray-500:    #6c757d;
+  --app-gray-700:    #343a40;
+  --app-gray-900:    #1a1d20;
+
+  /* Semantic */
+  --app-red:         #d32f2f;
+  --app-green:       #2e7d32;
+  --app-amber:       #f59e0b;
+
+  /* Mapped to app tokens */
+  --app-bg:             var(--app-gray-50);
+  --sidebar-bg:         var(--app-white);
+  --sidebar-border:     var(--app-gray-200);
+
+  --border-color:       var(--app-gray-200);
+  --border-light:       var(--app-gray-100);
+
+  --input-bg:           var(--app-white);
+  --input-border:       var(--app-gray-300);
+  --input-focus-ring:   var(--app-blue-ring);
+
+  --btn-bg:             var(--app-white);
+  --btn-hover-bg:       var(--app-gray-50);
+  --btn-active-bg:      var(--app-gray-100);
+
+  --accent-color:       var(--app-blue);
+  --accent-light:       var(--app-blue-light);
+  --accent-bg:          var(--app-blue-pale);
+  --accent-ring:        var(--app-blue-ring);
+
+  --color-text:         var(--app-gray-900);
+  --color-text-secondary: var(--app-gray-700);
+  --color-text-muted:   var(--app-gray-500);
+
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'SF Mono', 'Fira Code', 'Fira Mono', 'Roboto Mono', monospace;
+}
+
+/* ============================================================
+   Global Reset
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--color-text);
+  background: var(--app-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#app {
+  width: 100%;
+  height: 100%;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+input, select, textarea {
+  font-family: inherit;
+}
+
+::selection {
+  background: var(--app-blue-pale);
+  color: var(--app-blue-dark);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--app-gray-300);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--app-gray-500);
+}

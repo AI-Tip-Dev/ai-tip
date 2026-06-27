@@ -1,0 +1,9 @@
+packages:
+  - 'sdk'
+  - 'desktop'
+  - 'extension'
+  - 'packages/*'
+allowBuilds:
+  electron: true
+  electron-winstaller: false
+  esbuild: false
