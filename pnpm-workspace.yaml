@@ -7,3 +7,4 @@ allowBuilds:
   electron: true
   electron-winstaller: false
   esbuild: false
+  spawn-sync: set this to true or false

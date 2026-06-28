@@ -10,14 +10,22 @@ export interface ProviderMeta {
   requiresAuth: boolean
 }
 
-/** Local model configuration (without storage-layer `id`) */
+/** Local model configuration */
 export interface LocalModelConfig {
+  /** Unique ID assigned by storage layer */
+  id?: string
   name: string
   provider: string
+  /** Human-readable label for the UI (defaults to name if not set) */
+  displayName?: string
   baseUrl: string
   apiKey: string
   temperature?: number
   maxTokens?: number
+  /** Provider category: 'local' (Ollama) or 'remote' (cloud APIs) */
+  source?: 'local' | 'remote'
+  /** Custom HTTP headers for provider-specific auth */
+  customHeaders?: { key: string; value: string }[]
 }
 
 /** Chat message */

@@ -1,0 +1,11 @@
+{
+  "extends": "./.wxt/tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"],
+      "@lib/*": ["./src/lib/*"],
+      "@desktop/*": ["../desktop/src/*"],
+      "@shared/*": ["../desktop/src/shared/*"]
+    }
+  }
+}
