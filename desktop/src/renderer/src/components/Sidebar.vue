@@ -432,8 +432,10 @@ function handleSuggestionReSuggest(fieldKey: string): void {
         :has-overview-context="session.hasOverviewContext.value"
         :summary-loading="webview.pageSummaryLoading.value"
         :summary-error="webview.pageSummaryError.value"
+        :has-model="webview.hasModel.value"
         @generate="handleSelectOverview"
         @retry="webview.retryPageSummary()"
+        @configure-model="openSettings()"
       />
 
       <ChatView

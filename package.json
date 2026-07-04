@@ -2,7 +2,7 @@
   "name": "ai-tip",
   "private": true,
   "scripts": {
-    "dev": "pnpm --filter @ai-tip/desktop dev",
+    "dev": "pnpm --filter electron-ai-sidebar dev",
     "build": "pnpm -r build",
     "test": "pnpm -r test",
     "typecheck": "pnpm -r typecheck",

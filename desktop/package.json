@@ -29,7 +29,8 @@
     "pnpm": ">=8.0.0"
   },
   "scripts": {
-    "dev": "chcp 65001 >nul 2>&1 && electron-vite dev",
+    "dev": "electron-vite dev",
+    "dev:win": "chcp 65001 >nul 2>&1 && electron-vite dev",
     "start": "electron-vite preview",
     "build": "npm run typecheck && electron-vite build",
     "postinstall": "electron-builder install-app-deps",

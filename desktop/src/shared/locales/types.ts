@@ -36,6 +36,8 @@ export interface LocaleMessages {
   'summary.title': string
   'summary.emptyHint': string
   'summary.badgeLoading': string
+  'summary.noModelConfigured': string
+  'summary.configureModel': string
 
   // ── Model Config Cards ──
   'model.emptyTitle': string

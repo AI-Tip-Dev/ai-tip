@@ -30,6 +30,8 @@ const en: LocaleMessages = {
   'summary.title': 'Page Understanding',
   'summary.emptyHint': 'Analyzing page content, please wait...',
   'summary.badgeLoading': '...',
+  'summary.noModelConfigured': 'No AI model configured — please add one in Settings to enable page summarization',
+  'summary.configureModel': 'Configure Model',
 
   'model.emptyTitle': 'No model configured',
   'model.emptyDesc': 'Click "+ Add Model" to configure your first AI model connection',

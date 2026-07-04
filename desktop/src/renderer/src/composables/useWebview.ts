@@ -1,4 +1,4 @@
-import { ref, type Ref } from 'vue'
+import { ref, watch, type Ref } from 'vue'
 import log from 'electron-log/renderer'
 import type { SimpleField, RawAXNode, DetectFieldsResult, FieldContext, BatchFieldSuggestion, BatchSuggestResult, FieldSummary } from '@ai-tip/sdk'
 import { useAITip, type FillResult } from './useAITip'
@@ -41,6 +41,8 @@ export interface WebviewControl {
   pageSummaryError: Ref<string | null>
   /** Manually retry page summarization */
   retryPageSummary: () => void
+  /** Whether at least one AI model is configured (false → tip user to configure) */
+  hasModel: Ref<boolean>
   /** Batch pre-fill suggestions from last runBatchSuggest */
   batchSuggestions: Ref<BatchFieldSuggestion[]>
   /** Whether batch pre-fill is currently running */
@@ -77,6 +79,20 @@ export function useWebview(
 
   // ── AI Tip ──
   const aiTip = useAITip(webviewRef)
+
+  // ── Model Config ──
+  const { hasModel } = useModelConfig()
+
+  // When user configures their first model, clear the NO_MODEL error and auto-retry summarization
+  watch(hasModel, (now, prev) => {
+    if (now && !prev && pageSummaryError.value === 'NO_MODEL_CONFIGURED') {
+      log.info('summarizePage: model now configured, auto-retrying summarization')
+      pageSummaryError.value = null
+      if (currentUrl.value) {
+        summarizePage(currentUrl.value)
+      }
+    }
+  })
 
   // ── Bridge Host (handles bridge:request from SDK IIFE bundle) ──
   const bridgeHost = useBridgeHost(webviewRef)
@@ -154,22 +170,10 @@ export function useWebview(
     }
   }
 
-  /** Resolve LLM config with fallback — mirrors useChat.getModelConfig() */
+  /** Resolve LLM config — returns null if no model is configured (caller should tip user) */
   function getSummaryModelConfig() {
     const { toLLMConfig } = useModelConfig()
-    const cfg = toLLMConfig()
-    if (cfg) return cfg
-    // Fallback: Ollama localhost (same as useChat FALLBACK_CONFIG)
-    log.info('summarizePage: no model configured, using fallback (Ollama localhost)')
-    return {
-      provider: 'ollama',
-      id: 'ollama-default',
-      name: 'qwen2.5:7b',
-      baseUrl: 'http://localhost:11434/v1',
-      apiKey: '',
-      temperature: 0.3,
-      maxTokens: 512,
-    }
+    return toLLMConfig()
   }
 
   /** Request LLM to generate a concise summary of the current page */
@@ -181,6 +185,13 @@ export function useWebview(
     }
 
     const config = getSummaryModelConfig()
+    if (!config) {
+      log.info('summarizePage: no model configured, skipping summarization — tip user to configure LLM')
+      pageSummary.value = null
+      pageSummaryError.value = 'NO_MODEL_CONFIGURED'
+      pageSummaryLoading.value = false
+      return
+    }
 
     const normalizedUrl = normalizeUrl(url)
     if (normalizedUrl === lastSummarizedUrl && pageSummary.value) {
@@ -593,6 +604,7 @@ export function useWebview(
     pageSummary,
     pageSummaryLoading,
     pageSummaryError,
+    hasModel,
     retryPageSummary: () => summarizePage(currentUrl.value),
     // Batch pre-fill
     batchSuggestions,

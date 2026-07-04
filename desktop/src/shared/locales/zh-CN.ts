@@ -29,6 +29,8 @@ const zhCN: LocaleMessages = {
   'summary.title': '页面理解',
   'summary.emptyHint': '正在分析页面内容，请稍候...',
   'summary.badgeLoading': '...',
+  'summary.noModelConfigured': '未配置 AI 模型 — 请在设置中添加模型以启用页面摘要功能',
+  'summary.configureModel': '配置模型',
 
   'model.emptyTitle': '暂无模型配置',
   'model.emptyDesc': '点击「+ 添加模型」来配置第一个 AI 模型连接',

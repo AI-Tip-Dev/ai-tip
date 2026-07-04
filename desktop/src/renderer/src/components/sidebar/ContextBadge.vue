@@ -24,6 +24,8 @@ const props = defineProps<{
   summaryLoading?: boolean
   /** Error message if auto-summary failed */
   summaryError?: string | null
+  /** Whether at least one AI model is configured */
+  hasModel?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -31,10 +33,15 @@ const emit = defineEmits<{
   generate: []
   /** Retry page summarization */
   retry: []
+  /** Open settings to configure an AI model */
+  configureModel: []
 }>()
 
-/** True when summary failed and user hasn't written anything in Overview */
-const isError = computed(() => !props.hasOverviewContext && !!props.summaryError && !props.summaryLoading)
+/** True when no model is configured (special case — needs user action, not retry). Also requires hasModel=false so it auto-hides once the user configures a model. */
+const isNoModel = computed(() => !props.hasModel && !props.hasOverviewContext && props.summaryError === 'NO_MODEL_CONFIGURED' && !props.summaryLoading)
+
+/** True when summary failed for other reasons and user hasn't written anything in Overview */
+const isError = computed(() => !props.hasOverviewContext && !!props.summaryError && !props.summaryLoading && props.summaryError !== 'NO_MODEL_CONFIGURED')
 
 /** True when summary is in-flight */
 const isLoading = computed(() => !props.hasOverviewContext && !!props.summaryLoading)
@@ -53,7 +60,14 @@ const expanded = ref(false)
       <span class="cb-label">Generating page context…</span>
     </div>
 
-    <!-- Error: auto-summary failed -->
+    <!-- No model configured: tip user to configure an AI model -->
+    <div v-else-if="isNoModel" class="cb-empty cb-no-model">
+      <span class="cb-icon">⚙️</span>
+      <span class="cb-label">No AI model configured</span>
+      <button class="cb-config-btn" @click.stop="emit('configureModel')">Configure Model</button>
+    </div>
+
+    <!-- Error: auto-summary failed (fetch error, timeout, etc.) -->
     <div v-else-if="isError" class="cb-empty cb-error">
       <span class="cb-icon">⚠️</span>
       <span class="cb-label">Failed to generate context</span>
@@ -120,6 +134,11 @@ const expanded = ref(false)
   color: var(--color-error, #c0392b);
 }
 
+.cb-no-model {
+  background: #fff8e1;
+  color: #8d6e00;
+}
+
 .cb-skipped {
   background: #fafafa;
   color: var(--color-text-muted);
@@ -141,6 +160,24 @@ const expanded = ref(false)
 }
 .cb-retry-btn:hover {
   background: var(--color-error, #c0392b);
+  color: #fff;
+}
+
+.cb-config-btn {
+  flex-shrink: 0;
+  padding: 2px 8px;
+  border: 1px solid #8d6e00;
+  border-radius: 4px;
+  background: transparent;
+  color: #8d6e00;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.cb-config-btn:hover {
+  background: #8d6e00;
   color: #fff;
 }
 
