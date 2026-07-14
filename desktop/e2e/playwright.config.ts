@@ -29,7 +29,7 @@ export default defineConfig({
   use: {
     // Screenshot on failure
     screenshot: 'only-on-failure',
-    video: 'retain-on-failure',
+    video: 'on',
     trace: 'on-first-retry',
   },
 })

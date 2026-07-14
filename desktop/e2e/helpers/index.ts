@@ -6,8 +6,9 @@
  */
 
 import type { Page, ElectronApplication } from '@playwright/test'
-import { _electron as electron } from '@playwright/test'
-import { resolve } from 'path'
+import { _electron as electron, test } from '@playwright/test'
+import { resolve, join } from 'path'
+import { mkdirSync, existsSync } from 'fs'
 
 // ── Types ──
 
@@ -25,13 +26,27 @@ export interface E2EContext {
  *
  * Captures main-process stdout/stderr directly via Playwright's process API —
  * the recommended approach for Electron E2E logging.  Zero production-code changes.
+ *
+ * Video recording: uses test.info() to determine the output directory so
+ * videos are saved to test-results/<test-name>/ automatically.
  */
 export async function launchApp(entryPath: string): Promise<E2EContext> {
   const logLines: string[] = []
 
+  // Determine video output directory from Playwright's test-results
+  const testInfo = test.info()
+  const videoDir = join(testInfo.outputDir, 'videos')
+  if (!existsSync(videoDir)) {
+    mkdirSync(videoDir, { recursive: true })
+  }
+
   const app = await electron.launch({
     args: [entryPath],
     env: { ...process.env, NODE_ENV: 'test' },
+    recordVideo: {
+      dir: videoDir,
+      size: { width: 1280, height: 800 },
+    },
   })
 
   // Capture main-process stdout/stderr (electron-log console transport writes here)
