@@ -74,6 +74,8 @@ const en: LocaleMessages = {
   'modelDialog.cancel': 'Cancel',
   'modelDialog.save': 'Save',
   'modelDialog.close': 'Close',
+  'modelDialog.saveFailed': 'Save failed: {reason}',
+  'modelDialog.saveStorageFailed': 'Save failed: Unable to write to local storage. Check disk space or browser settings.',
 
   'lang.uiLang': 'Interface Language',
   'lang.uiLangDesc': 'Choose the display language for the application',

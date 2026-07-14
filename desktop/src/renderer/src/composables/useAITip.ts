@@ -38,9 +38,11 @@ export interface FillResult {
 // SDK global API — called via executeJavaScript in the webview
 // ================================================================
 
-/** Call window.__aiTipSDK__.fillField(value, ctx) in webview context */
+/** Call window.__aiTipSDK__.fillField(value, ctx) in webview context.
+ * Wrapped in try-catch to prevent GUEST_VIEW_MANAGER_CALL errors
+ * when the SDK is not (yet) loaded or the call throws unexpectedly. */
 function buildFillScript(value: string, ctx: FieldContext): string {
-  return `window.__aiTipSDK__.fillField(${JSON.stringify(value)},${JSON.stringify(ctx)})`
+  return `(function(){try{return window.__aiTipSDK__.fillField(${JSON.stringify(value)},${JSON.stringify(ctx)})}catch(e){return {ok:false,reason:'script error',error:String(e),stack:e.stack&&e.stack.slice(0,300)}}})()`
 }
 
 /** Call window.__aiTipSDK__.highlightField(ctx) in webview context */

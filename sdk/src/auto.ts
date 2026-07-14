@@ -305,15 +305,25 @@ function startObserver(): void {
 // ============================================================
 
 function fillField(value: string, ctx: FieldContext): FillResult {
-  const el = findElementByContext(ctx)
-  if (!el) {
-    return { ok: false, reason: 'element not found', label: ctx.label }
+  try {
+    const el = findElementByContext(ctx)
+    if (!el) {
+      return { ok: false, reason: 'element not found', label: ctx.label }
+    }
+    const result = setNativeValue(el, value)
+    if (result.ok) {
+      flashField(el)
+    }
+    return result
+  } catch (e) {
+    return {
+      ok: false,
+      reason: 'unexpected error',
+      error: String(e),
+      stack: (e as Error).stack?.slice(0, 300),
+      label: ctx.label,
+    }
   }
-  const result = setNativeValue(el, value)
-  if (result.ok) {
-    flashField(el)
-  }
-  return result
 }
 
 function highlightField(ctx: FieldContext): void {

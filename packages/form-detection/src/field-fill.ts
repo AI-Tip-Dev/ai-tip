@@ -113,6 +113,43 @@ export function setNativeValue(el: HTMLElement, value: string): FillResult {
       return { ok: true, label: value }
     }
 
+    // ── <input type="checkbox|radio"> ──
+    // Must set .checked instead of .value; otherwise the field appears
+    // to fill successfully but the checkbox/radio remains unchecked.
+    if (tag === 'input' && ((el as HTMLInputElement).type === 'checkbox' || (el as HTMLInputElement).type === 'radio')) {
+      const inputEl = el as HTMLInputElement
+      const truthy = ['true', 'yes', '1', 'on', 'checked', 'y'].includes(
+        String(value).toLowerCase().trim(),
+      )
+      if (inputEl.type === 'checkbox') {
+        inputEl.checked = truthy
+        inputEl.dispatchEvent(new Event('input', { bubbles: true }))
+        inputEl.dispatchEvent(new Event('change', { bubbles: true }))
+        return { ok: true, label: value }
+      }
+      // radio — find matching option by value or label text
+      const radioName = inputEl.name
+      if (radioName) {
+        const radioGroup = document.querySelectorAll(
+          'input[type="radio"][name="' + radioName.replace(/"/g, '\\"') + '"]',
+        )
+        for (let i = 0; i < radioGroup.length; i++) {
+          const radio = radioGroup[i] as HTMLInputElement
+          const radioLabel = radio.labels?.[0]?.textContent?.trim() || radio.value
+          if (
+            radio.value.toLowerCase() === value.toLowerCase() ||
+            radioLabel.toLowerCase().includes(value.toLowerCase())
+          ) {
+            radio.checked = true
+            radio.dispatchEvent(new Event('input', { bubbles: true }))
+            radio.dispatchEvent(new Event('change', { bubbles: true }))
+            return { ok: true, label: value }
+          }
+        }
+      }
+      return { ok: false, reason: 'No matching radio option', label: value }
+    }
+
     // ── <input> (use native setter for React/Angular/Vue bindings) ──
     const nativeSetter =
       Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value') ||

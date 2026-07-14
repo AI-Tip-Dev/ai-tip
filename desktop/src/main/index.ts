@@ -65,7 +65,7 @@ function createWindow(): void {
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
     log.info('Loading dev URL:', process.env['ELECTRON_RENDERER_URL'])
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
-    mainWindow.webContents.openDevTools()
+    mainWindow.webContents.openDevTools({ mode: 'detach' })
   } else {
     const indexPath = join(__dirname, '../renderer/index.html')
     log.info('Loading production file:', indexPath)
@@ -476,7 +476,7 @@ ipcMain.handle(
       log.debug(`page:summarize: body=${body.slice(0, 300)}`)
 
       const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), 30_000)
+      const timeoutId = setTimeout(() => controller.abort(), 60_000)
 
       span.addEvent('pipeline.api_call')
       fetchStart = Date.now()
@@ -496,7 +496,7 @@ ipcMain.handle(
         const errText = await response.text().catch(() => '')
         log.error(`page:summarize: HTTP ${response.status}: ${errText.slice(0, 200)}`)
         span.setError(`HTTP ${response.status}`)
-        return null
+        throw new Error(`LLM API returned HTTP ${response.status}${errText ? ': ' + errText.slice(0, 100) : ''}`)
       }
 
       span.addEvent('pipeline.parse')
@@ -517,11 +517,15 @@ ipcMain.handle(
       if (e.name === 'AbortError') {
         log.warn(`page:summarize: timed out after ${elapsed}ms`)
         span.setError(`Timeout after ${elapsed}ms`)
+        throw new Error(`Page summarization timed out after ${Math.round(elapsed / 1000)}s — the LLM may be overloaded, try again or switch to a faster model`)
+      } else if (e.message?.startsWith('LLM API returned')) {
+        // re-throw HTTP errors that we already wrapped above
+        throw e
       } else {
         log.error(`page:summarize: fetch error after ${elapsed}ms: name=${e.name} code=${e.code} message=${e.message}`)
         span.setError(e.message)
+        throw new Error(`Network error: ${e.message || 'Unknown error'}`)
       }
-      return null
     } finally {
       finishSpan(span.spanId)
     }

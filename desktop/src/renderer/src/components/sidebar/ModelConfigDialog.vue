@@ -36,6 +36,7 @@ const form = reactive<ModelConfig>(defaultForm())
 const showApiKey = ref(false)
 const isTesting = ref(false)
 const testResult = ref<{ ok: boolean; message: string } | null>(null)
+const saveError = ref<string | null>(null)
 const testTraceSpanId = ref<string | null>(null)
 const showAdvanced = ref(false)
 
@@ -54,6 +55,7 @@ watch(() => props.visible, (v) => {
     }
     showApiKey.value = false
     testResult.value = null
+    saveError.value = null
     showAdvanced.value = false
   }
 })
@@ -98,14 +100,33 @@ async function handleTest(): Promise<void> {
 }
 
 function handleSave(): void {
+  saveError.value = null
   if (!form.name.trim()) return
-  const cfg: ModelConfig = JSON.parse(JSON.stringify({
-    ...form,
-    id: form.id || `model-${Date.now()}`,
-    name: form.name.trim(),
-    displayName: form.displayName.trim(),
-  }))
-  saveModel(cfg)
+
+  let cfg: ModelConfig
+  try {
+    cfg = JSON.parse(JSON.stringify({
+      ...form,
+      id: form.id || `model-${Date.now()}`,
+      name: form.name.trim(),
+      displayName: form.displayName.trim(),
+    }))
+  } catch (e: any) {
+    saveError.value = t('modelDialog.saveFailed', { reason: e.message || String(e) })
+    return
+  }
+
+  try {
+    const ok = saveModel(cfg)
+    if (!ok) {
+      saveError.value = t('modelDialog.saveStorageFailed')
+      return
+    }
+  } catch (e: any) {
+    saveError.value = t('modelDialog.saveFailed', { reason: e.message || String(e) })
+    return
+  }
+
   emit('saved')
   emit('update:visible', false)
 }
@@ -287,6 +308,11 @@ function handleOverlayClick(e: MouseEvent): void {
               />
             </div>
           </template>
+        </div>
+
+        <!-- Save Error -->
+        <div v-if="saveError" class="save-error">
+          ⚠️ {{ saveError }}
         </div>
 
         <!-- Footer -->
@@ -610,6 +636,17 @@ function handleOverlayClick(e: MouseEvent): void {
 }
 .test-result.ok { color: #16a34a; }
 .test-result.err { color: #ef4444; }
+
+.save-error {
+  margin: 0 24px 8px;
+  padding: 10px 14px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  color: #dc2626;
+  font-size: 13px;
+  font-weight: 500;
+}
 
 .trace-link {
   margin-left: 6px;

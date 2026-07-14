@@ -250,7 +250,8 @@ export function useWebview(
         log.warn('summarizePage: LLM returned empty summary')
       }
     } catch (e: any) {
-      lastSummarizedUrl = normalizedUrl
+      // Reset URL cache so a page refresh or navigation will re-trigger summarization
+      lastSummarizedUrl = ''
       pageSummary.value = null
       pageSummaryError.value = e?.message || 'Unknown error'
       ;(window as any).__page_summary = null

@@ -82,6 +82,8 @@ export interface LocaleMessages {
   'modelDialog.cancel': string
   'modelDialog.save': string
   'modelDialog.close': string
+  'modelDialog.saveFailed': string
+  'modelDialog.saveStorageFailed': string
 
   // ── Language Settings ──
   'lang.uiLang': string

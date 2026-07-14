@@ -73,6 +73,8 @@ const zhCN: LocaleMessages = {
   'modelDialog.cancel': '取消',
   'modelDialog.save': '保存',
   'modelDialog.close': '关闭',
+  'modelDialog.saveFailed': '保存失败: {reason}',
+  'modelDialog.saveStorageFailed': '保存失败: 无法写入本地存储，请检查磁盘空间或浏览器设置',
 
   'lang.uiLang': '界面语言',
   'lang.uiLangDesc': '选择应用界面的显示语言',

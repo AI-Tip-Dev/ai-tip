@@ -69,7 +69,7 @@ export function useModelConfig() {
 
   // ========== CRUD ==========
 
-  function saveModel(cfg: ModelConfig): void {
+  function saveModel(cfg: ModelConfig): boolean {
     const idx = models.value.findIndex(m => m.id === cfg.id)
     if (idx >= 0) {
       models.value[idx] = cfg
@@ -77,18 +77,26 @@ export function useModelConfig() {
       models.value.push(cfg)
     }
     activeId.value = cfg.id
-    localStorage.setItem(ACTIVE_KEY, cfg.id)
-    persistToStorage()
+    try {
+      localStorage.setItem(ACTIVE_KEY, cfg.id)
+    } catch {
+      // non-critical — activeId is in-memory
+    }
+    return persistToStorage()
   }
 
-  function deleteModel(id: string): void {
+  function deleteModel(id: string): boolean {
     models.value = models.value.filter(m => m.id !== id)
     if (activeId.value === id) {
       activeId.value = models.value[0]?.id ?? null
-      if (activeId.value) localStorage.setItem(ACTIVE_KEY, activeId.value)
-      else localStorage.removeItem(ACTIVE_KEY)
+      try {
+        if (activeId.value) localStorage.setItem(ACTIVE_KEY, activeId.value)
+        else localStorage.removeItem(ACTIVE_KEY)
+      } catch {
+        // non-critical — activeId is in-memory
+      }
     }
-    persistToStorage()
+    return persistToStorage()
   }
 
   function setActiveModel(id: string): void {
@@ -137,12 +145,23 @@ export function useModelConfig() {
 
 function loadFromStorage(): ModelConfig[] {
   try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
-  } catch {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (!raw) return []
+    const parsed = JSON.parse(raw)
+    if (!Array.isArray(parsed)) return []
+    return parsed
+  } catch (e) {
+    console.error('[useModelConfig] Failed to load models from localStorage:', e)
     return []
   }
 }
 
-function persistToStorage(): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(models.value))
+function persistToStorage(): boolean {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(models.value))
+    return true
+  } catch (e) {
+    console.error('[useModelConfig] Failed to persist models to localStorage:', e)
+    return false
+  }
 }

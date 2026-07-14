@@ -58,12 +58,11 @@ test.describe('AI Tip Fill Pipeline', { tag: '@p0' }, () => {
     await closeApp(ctx)
   })
 
-  // ── Test 1: direct fill via executeJavaScript (no chat msg) ──
+  // ── Test 1: direct fill via executeJavaScript → verify exact value ──
   test('fill pipeline → executeJavaScript sets field value end-to-end', async () => {
     await webview.goto(TEST_FORM_URL)
     await webview.triggerAITip('#first_name')
 
-    // Direct fill via webview.executeJavaScript (does not send chat msg)
     const testValue = 'E2E-First-Name'
     const fillResult = await ctx.page.evaluate(async (val) => {
       const wv = document.querySelector('#main-webview') as any
@@ -87,17 +86,16 @@ test.describe('AI Tip Fill Pipeline', { tag: '@p0' }, () => {
     }, testValue)
 
     expect(fillResult.ok).toBe(true)
+    // Verify the EXACT value was written into the field
     expect(await webview.getValue('#first_name')).toBe(testValue)
   })
 
-  // ── Test 2: mock LLM → [[OPTIONS]] chips → click → fill ──
+  // ── Test 2: mock LLM → [[OPTIONS]] chips → click → verify exact value ──
   test('mock LLM → [[OPTIONS]] chips render → click fills webview field', async () => {
-    // Inject IPC handler in MAIN PROCESS via electronApp.evaluate().
-    // Intercepts llm:stream:start → fires canned llm:stream:chunk events.
-    // Zero production code changes — mock runs entirely in test.
+    const cannedOptions = ['Acme Corporation', 'Zurich Insurance Group', 'Global Risk Solutions']
     await mockLLMApi(ctx.app, {
       fieldLabel: 'Company Name',
-      options: ['Acme Corporation', 'Zurich Insurance Group', 'Global Risk Solutions'],
+      options: cannedOptions,
       explanation: 'Here are 3 candidate values for the Company Name field.',
     })
 
@@ -117,7 +115,97 @@ test.describe('AI Tip Fill Pipeline', { tag: '@p0' }, () => {
     await optionChip.click()
     await ctx.page.waitForTimeout(500)
 
+    // Verify the field value matches the clicked option chip value exactly
     const fieldValue = await webview.getValue('#company_name')
-    expect(fieldValue).toBeTruthy()
+    expect(fieldValue).toBe(optionValue!.trim())
+  })
+
+  // ── Test 3: checkbox fill via window.__aiTipSDK__.fillField() (real SDK path) ──
+  test('checkbox fill via SDK → sets .checked and returns ok', async () => {
+    await webview.goto(TEST_FORM_URL)
+
+    // Build a FieldContext matching the GDPR consent checkbox
+    const fieldCtx = {
+      tagName: 'input',
+      type: 'checkbox',
+      name: '',
+      id: 'gdpr_consent',
+      placeholder: '',
+      value: '',
+      ariaLabel: '',
+      label: 'Data processing consent obtained (GDPR / FADP)',
+      formPurpose: '',
+      siblingLabels: [] as string[],
+      pageTitle: 'Customer Registration — AI Sidebar',
+      pageUrl: TEST_FORM_URL,
+      rect: { top: 0, left: 0, width: 100, height: 30 },
+    }
+
+    // Call the SDK fillField via executeJavaScript — the EXACT path that
+    // triggered GUEST_VIEW_MANAGER_CALL in the original bug report.
+    const fillResult = await ctx.page.evaluate(async (ctx) => {
+      const wv = document.querySelector('#main-webview') as any
+      if (!wv) return { ok: false, reason: 'no webview' }
+
+      // Wrap in try-catch like the fix should, but test the raw SDK call
+      const resultJson = await wv.executeJavaScript(`
+        (function(){
+          try {
+            if (!window.__aiTipSDK__) return JSON.stringify({ok:false,reason:'SDK not loaded'});
+            return JSON.stringify(window.__aiTipSDK__.fillField("true",${JSON.stringify(ctx)}));
+          } catch(e) {
+            return JSON.stringify({ok:false,reason:'script error',error:String(e)});
+          }
+        })()
+      `)
+      return JSON.parse(resultJson)
+    }, fieldCtx)
+
+    // Verify fillField returned ok (not GUEST_VIEW_MANAGER_CALL error)
+    expect(fillResult.ok).toBe(true)
+
+    // Verify the checkbox is actually checked
+    const isChecked = await ctx.page.evaluate(() => {
+      const wv = document.querySelector('#main-webview') as any
+      if (!wv) return false
+      return wv.executeJavaScript(
+        `(function(){ var el=document.getElementById('gdpr_consent'); return !!el && el.checked })()`
+      )
+    })
+    expect(isChecked).toBe(true)
+  })
+
+  // ── Test 4: checkbox fill via direct executeJavaScript → verify .checked ──
+  test('checkbox direct fill → sets .checked property correctly', async () => {
+    await webview.goto(TEST_FORM_URL)
+
+    // Directly set .checked via executeJavaScript (bypasses SDK)
+    const fillResult = await ctx.page.evaluate(async () => {
+      const wv = document.querySelector('#main-webview') as any
+      if (!wv) return '{"ok":false}'
+
+      return wv.executeJavaScript(`
+        (function(){
+          var el = document.getElementById('gdpr_consent');
+          if (!el) return '{"ok":false,"reason":"element not found"}';
+          el.checked = true;
+          el.dispatchEvent(new Event('input',{bubbles:true}));
+          el.dispatchEvent(new Event('change',{bubbles:true}));
+          return '{"ok":true}';
+        })()
+      `)
+    })
+    const parsed = JSON.parse(fillResult as string)
+    expect(parsed.ok).toBe(true)
+
+    // Verify the checkbox is checked
+    const isChecked = await ctx.page.evaluate(() => {
+      const wv = document.querySelector('#main-webview') as any
+      if (!wv) return false
+      return wv.executeJavaScript(
+        `(function(){ var el=document.getElementById('gdpr_consent'); return !!el && el.checked })()`
+      )
+    })
+    expect(isChecked).toBe(true)
   })
 })
