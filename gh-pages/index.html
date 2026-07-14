@@ -1,209 +1,154 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>AI Tip — Intelligent Form Filling, Powered by Your Documents</title>
-<meta name="description" content="Open any web page, let AI analyze the form, search your private knowledge base, and suggest values — all locally, no data leaves your machine." />
-<link rel="stylesheet" href="css/style.css" />
+<title>AI Tip</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+:root{--blue:#1a73e8;--blue-bg:#e8f0fe;--text:#202124;--text2:#5f6368;--bg:#fff;--bg-alt:#f8f9fa;--border:#dadce0;--shadow:0 1px 3px rgba(0,0,0,.08);--shadow-lg:0 4px 24px rgba(0,0,0,.06);--radius:12px;--font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);font-size:15px;line-height:1.6;color:var(--text);background:var(--bg);-webkit-font-smoothing:antialiased}
+a{color:var(--blue);text-decoration:none}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:14px 40px;border-bottom:1px solid var(--border);background:rgba(255,255,255,.88);backdrop-filter:blur(12px);position:sticky;top:0;z-index:100}
+.nav-brand{display:flex;align-items:center;gap:8px;font-size:18px;font-weight:700;color:var(--text)}
+.nav-brand span{font-size:22px}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-links a{font-size:14px;font-weight:500;color:var(--text2);transition:color .15s}
+.nav-links a:hover{color:var(--text)}
+.lang-btn{background:var(--bg-alt);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;transition:all .15s;font-family:var(--font)}
+.lang-btn:hover{background:var(--border);color:var(--text)}
+.btn-primary{display:inline-flex;align-items:center;gap:6px;padding:12px 28px;background:var(--blue);color:#fff;border-radius:8px;font-size:15px;font-weight:600;transition:all .15s;text-decoration:none}
+.btn-primary:hover{background:#1669d0;color:#fff;transform:translateY(-1px);box-shadow:0 4px 12px rgba(26,115,232,.3)}
+.btn-ghost{display:inline-flex;align-items:center;gap:4px;padding:12px 20px;color:var(--text);font-size:15px;font-weight:500;transition:all .15s;text-decoration:none;border-radius:8px}
+.btn-ghost:hover{background:var(--blue-bg);color:var(--blue)}
+.hero{text-align:center;padding:56px 32px 36px;max-width:720px;margin:0 auto}
+.hero h1{font-size:42px;font-weight:800;letter-spacing:-1.2px;line-height:1.15;margin-bottom:14px}
+.hero h1 span{color:var(--blue)}
+.hero p{font-size:17px;color:var(--text2);max-width:560px;margin:0 auto 22px;line-height:1.65}
+.hero-actions{display:flex;gap:10px;justify-content:center;align-items:center}
+.demo-section{padding:0 40px 48px}
+.demo-inner{max-width:920px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+.demo-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.demo-card video{width:100%;display:block;border-bottom:1px solid var(--border)}
+.demo-label{display:flex;align-items:baseline;gap:10px;padding:16px 22px;flex-wrap:wrap}
+.demo-label strong{font-size:15px;font-weight:600;white-space:nowrap}
+.demo-label span{font-size:14px;color:var(--text2);line-height:1.5}
+.section{padding:52px 48px}
+.section-alt{background:var(--bg-alt)}
+.section-title{text-align:center;font-size:28px;font-weight:700;letter-spacing:-.4px;margin-bottom:36px}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;max-width:960px;margin:0 auto}
+.card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:26px 24px;transition:box-shadow .2s}
+.card:hover{box-shadow:var(--shadow-lg)}
+.card-icon{font-size:28px;margin-bottom:12px}
+.card h3{font-size:17px;font-weight:700;margin-bottom:6px}
+.card p{font-size:14px;color:var(--text2);line-height:1.6}
+.steps{max-width:720px;margin:0 auto}
+.step{margin-bottom:28px}
+.step b{display:inline-block;width:32px;height:32px;line-height:32px;text-align:center;background:var(--blue-bg);color:var(--blue);border-radius:50%;font-size:14px;margin-right:12px;vertical-align:middle}
+.step h4{display:inline;font-size:16px;font-weight:600;margin:0}
+.step p{font-size:14px;color:var(--text2);line-height:1.6;margin:4px 0 0 44px}
+.footer{display:flex;align-items:center;justify-content:space-between;padding:18px 40px;border-top:1px solid var(--border);font-size:13px;color:var(--text2);flex-wrap:wrap;gap:12px}
+.footer-links{display:flex;gap:20px}
+.footer-links a{color:var(--text2)}
+.footer-links a:hover{color:var(--text)}
+html.en .zh,html:not(.en) .en{display:none}
+@media(max-width:768px){.hero h1{font-size:34px}.hero{padding:64px 24px 48px}.demo-section{padding:0 20px 56px}.section{padding:56px 24px}.nav{padding:12px 20px}.nav-links{gap:16px}.footer{flex-direction:column;text-align:center}}
+</style>
 </head>
 <body>
 
-<!-- ── Nav ── -->
-<nav class="landing-nav">
-  <div class="nav-brand">
-    <span class="brand-emoji">🤖</span>
-    AI Tip
-  </div>
+<nav class="nav">
+  <div class="nav-brand"><span>🤖</span> AI Tip</div>
   <div class="nav-links">
-    <a href="#features">Features</a>
-    <a href="#how-it-works">How It Works</a>
-    <a href="#demo">Demo</a>
-    <a href="#architecture">Architecture</a>
-    <a href="test-form.html" class="btn-primary">📝 Try Demo Form</a>
+    <a href="#demo"><span class="zh">演示</span><span class="en">Demo</span></a>
+    <a href="#features"><span class="zh">特色</span><span class="en">Features</span></a>
+    <a href="#how-it-works"><span class="zh">怎么用</span><span class="en">How It Works</span></a>
+    <button class="lang-btn" onclick="var h=document.documentElement;h.classList.toggle('en');h.lang=h.classList.contains('en')?'en':'zh-CN';localStorage.setItem('lang',h.classList.contains('en')?'en':'zh')">中/EN</button>
   </div>
 </nav>
 
-<!-- ── Hero ── -->
 <section class="hero">
-  <div class="hero-badge">🔬 Open Source · Local-First · Privacy Preserving</div>
-  <h1>Fill Any Web Form <span>with AI</span>,<br>Powered by Your Own Documents</h1>
+  <h1>
+    <span class="zh">不改一行代码，<span style="color:var(--blue)">AI 帮你在任何网页填表</span></span>
+    <span class="en">Zero integration.<br><span style="color:var(--blue)">AI fills any web form</span> for you.</span>
+  </h1>
   <p>
-    AI Tip reads your contracts, spreadsheets, and notes — then intelligently fills
-    web forms for you. Everything runs locally. Your data never leaves your machine.
+    <span class="zh">你的 CRM、ERP、OA 系统不用改造。AI Tip 以侧边栏形态叠加在现有网页上，自动检测表单，从你的合同和表格中检索答案，你审核确认后一键填入。</span>
+    <span class="en">No code changes. AI Tip overlays as a sidebar on your existing CRM or ERP — auto-detects forms, retrieves answers from your documents, and fills fields with one click after your review.</span>
   </p>
   <div class="hero-actions">
-    <a href="#how-it-works" class="btn-primary">See How It Works</a>
-    <a href="https://github.com" class="btn-outline">View on GitHub</a>
+    <a href="#demo" class="btn-primary"><span class="zh">看演示</span><span class="en">Watch Demo</span></a>
+    <a href="https://github.com/ai-tip-dev/ai-tip" class="btn-ghost">GitHub →</a>
   </div>
 </section>
 
-<!-- ── Value Flow ── -->
-<div class="value-flow">
-  <div class="flow-step"><span class="step-icon">📄</span> Your Documents</div>
-  <span class="flow-arrow">→</span>
-  <div class="flow-step"><span class="step-icon">🧠</span> Local Vector DB</div>
-  <span class="flow-arrow">→</span>
-  <div class="flow-step"><span class="step-icon">🔍</span> AI Detects Form</div>
-  <span class="flow-arrow">→</span>
-  <div class="flow-step"><span class="step-icon">🤖</span> LLM Suggests Values</div>
-  <span class="flow-arrow">→</span>
-  <div class="flow-step"><span class="step-icon">✅</span> You Confirm &amp; Fill</div>
-</div>
-
-<!-- ── Features ── -->
-<section class="section" id="features">
-  <div class="section-header">
-    <h2>Why AI Tip?</h2>
-    <p>Existing tools can't read your private documents or work on arbitrary websites. We can.</p>
-  </div>
-  <div class="features-grid">
-    <div class="feature-card">
-      <div class="card-icon">🌐</div>
-      <h3>Works on Any Website</h3>
-      <p>Not tied to specific platforms like Salesforce. AI Tip detects forms on any web page — CRM, ERP, government portals, internal tools.</p>
-    </div>
-    <div class="feature-card">
-      <div class="card-icon">🔒</div>
-      <h3>100% Local &amp; Private</h3>
-      <p>All document processing and AI inference happens on your machine. No cloud uploads, no third-party access to your sensitive data.</p>
-    </div>
-    <div class="feature-card">
-      <div class="card-icon">📚</div>
-      <h3>Understands Your Documents</h3>
-      <p>Upload PDFs, Excel sheets, Markdown notes — AI Tip indexes them into a local vector database and retrieves relevant context for each form field.</p>
-    </div>
-    <div class="feature-card">
-      <div class="card-icon">🧠</div>
-      <h3>AI Agent Decision-Making</h3>
-      <p>Not just keyword matching. The LLM reasons about which document fragment applies to which field, and explains its confidence level.</p>
-    </div>
-    <div class="feature-card">
-      <div class="card-icon">✅</div>
-      <h3>Human-in-the-Loop</h3>
-      <p>AI suggests — you decide. Review every suggestion, see the source document, and accept, edit, or reject before anything gets filled.</p>
-    </div>
-    <div class="feature-card">
-      <div class="card-icon">⚡</div>
-      <h3>Batch Fill</h3>
-      <p>Fill all 15+ fields at once. Review results in a summary card, then confirm individually or in bulk. Save minutes on every form.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ── How It Works ── -->
-<section class="section" id="how-it-works">
-  <div class="section-header">
-    <h2>How It Works</h2>
-    <p>From document to filled form — in 5 steps</p>
-  </div>
-  <div class="steps-list">
-    <div class="step-item">
-      <div class="step-num">1</div>
-      <div class="step-body">
-        <h4>Upload Your Documents</h4>
-        <p>Drag &amp; drop PDFs, Excel files, or Markdown notes. AI Tip chunks and embeds them into a local LanceDB vector store.</p>
-      </div>
-    </div>
-    <div class="step-item">
-      <div class="step-num">2</div>
-      <div class="step-body">
-        <h4>Open Any Web Form</h4>
-        <p>Navigate to your CRM, insurance portal, or any web page with a form. AI Tip's sidebar opens alongside.</p>
-      </div>
-    </div>
-    <div class="step-item">
-      <div class="step-num">3</div>
-      <div class="step-body">
-        <h4>AI Detects Form Fields</h4>
-        <p>The form detection engine scans the DOM and extracts all input fields — text, selects, checkboxes, date pickers, and more.</p>
-      </div>
-    </div>
-    <div class="step-item">
-      <div class="step-num">4</div>
-      <div class="step-body">
-        <h4>LLM Reasons &amp; Suggests</h4>
-        <p>For each field, the LLM searches your knowledge base, retrieves the most relevant document chunks, and generates a suggested value with source attribution and confidence score.</p>
-      </div>
-    </div>
-    <div class="step-item">
-      <div class="step-num">5</div>
-      <div class="step-body">
-        <h4>You Review &amp; Confirm</h4>
-        <p>See every suggestion with its source and confidence. Accept, edit, or skip — then the value is written to the form.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── Demo Videos ── -->
-<section class="section" id="demo">
-  <div class="section-header">
-    <h2>See It In Action</h2>
-    <p>Real e2e test recordings — AI Tip filling a Customer Registration form</p>
-  </div>
-  <div class="demo-videos">
-    <div class="demo-video-card">
-      <video controls muted loop poster=""
-             title="AI Tip — Single Field Fill Demo">
+<section class="demo-section" id="demo">
+  <div class="demo-inner">
+    <div class="demo-card">
+      <video preload="metadata" autoplay controls muted loop playsinline>
         <source src="videos/fill-form-demo.webm" type="video/webm" />
       </video>
-      <div class="vc-label">
-        <h4>✨ Single Field Fill</h4>
-        <p>Click a field → AI analyzes your documents → suggests a value with source &amp; confidence → you accept → filled!</p>
+      <div class="demo-label">
+        <strong><span class="zh">单字段填充</span><span class="en">Single Field Fill</span></strong>
+        <span><span class="zh">鼠标悬停 → AI 检索你的文档 → 推荐候选值 + 来源 + 置信度 → 你点一下确认</span><span class="en">Hover a field → AI searches your documents → suggests value with source &amp; confidence → one click to fill</span></span>
       </div>
     </div>
-    <div class="demo-video-card">
-      <video controls muted loop poster=""
-             title="AI Tip — Batch Fill Demo">
+    <div class="demo-card">
+      <video preload="metadata" autoplay controls muted loop playsinline>
         <source src="videos/batch-fill-demo.webm" type="video/webm" />
       </video>
-      <div class="vc-label">
-        <h4>⚡ Batch Fill All Fields</h4>
-        <p>AI analyzes 15+ fields at once, retrieves values from contracts &amp; spreadsheets, and fills the entire form in seconds.</p>
+      <div class="demo-label">
+        <strong><span class="zh">批量填充</span><span class="en">Batch Fill</span></strong>
+        <span><span class="zh">一键分析 15+ 字段，AI 从你的合同和表格中并发检索，逐个推荐 + 置信度标注，几秒填完整张表</span><span class="en">Analyze 15+ fields at once — AI concurrently searches your documents, suggests per field with confidence scores, fills the whole form in seconds</span></span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── Architecture ── -->
-<section class="section" id="architecture">
-  <div class="section-header">
-    <h2>Architecture</h2>
-    <p>Electron desktop app + modular packages</p>
-  </div>
-  <div class="arch-diagram">
-    <div class="arch-row">
-      <div class="arch-box web">🌐 Web Page (CDP)</div>
-      <span style="font-size:18px">↔</span>
-      <div class="arch-box detect">🔍 Form Detection</div>
-      <span style="font-size:18px">→</span>
-      <div class="arch-box ai">🤖 AI Agent (LLM)</div>
+<section class="section" id="features">
+  <h2 class="section-title"><span class="zh">为什么选择 AI Tip</span><span class="en">Why AI Tip</span></h2>
+  <div class="grid-3">
+    <div class="card"><div class="card-icon">🔌</div>
+      <h3><span class="zh">零集成，即装即用</span><span class="en">Zero Integration</span></h3>
+      <p><span class="zh">你的 CRM、ERP、OA 系统不用改一行代码。AI Tip 以侧边栏形态叠加在任何网页上，打开即用。</span><span class="en">No code changes to your CRM, ERP, or OA systems. AI Tip overlays as a sidebar on any webpage — just open and use.</span></p>
     </div>
-    <div class="arch-row">
-      <div class="arch-box kb">📚 LanceDB Vector Store</div>
-      <span style="font-size:18px">↔</span>
-      <div class="arch-box ai">🤖 LLM Providers (10+)</div>
-      <span style="font-size:18px">→</span>
-      <div class="arch-box fill">✅ Fill Form</div>
+    <div class="card"><div class="card-icon">🔒</div>
+      <h3><span class="zh">数据不出电脑</span><span class="en">100% Local &amp; Private</span></h3>
+      <p><span class="zh">文档处理、向量检索、LLM 推理全在本地运行。不上传云端，你的合同和客户数据始终在自己手里。</span><span class="en">Document processing, vector search, and LLM inference all run locally. No cloud uploads — your data stays on your machine.</span></p>
+    </div>
+    <div class="card"><div class="card-icon">⚡</div>
+      <h3><span class="zh">批量填充，效率翻倍</span><span class="en">Batch Fill, Double Speed</span></h3>
+      <p><span class="zh">一键分析 15+ 字段，AI 并发检索你的知识库，逐个推荐候选值 + 置信度，几秒填完整张表。</span><span class="en">One-click analysis of 15+ fields. AI searches your knowledge base concurrently, suggests per field with confidence — fills the form in seconds.</span></p>
     </div>
   </div>
 </section>
 
-<!-- ── CTA ── -->
-<section class="cta-section">
-  <h2>Try It Yourself</h2>
-  <p>Open the demo form in AI Tip and see AI-powered auto-fill in action — from your own documents.</p>
-  <a href="test-form.html" class="btn-primary">📝 Open Demo Form →</a>
+<section class="section section-alt" id="how-it-works">
+  <h2 class="section-title"><span class="zh">怎么用</span><span class="en">How It Works</span></h2>
+  <div class="steps">
+    <div class="step"><b>1</b><h4><span class="zh">上传你的文档</span><span class="en">Upload Documents</span></h4><p><span class="zh">PDF、Excel、Markdown 拖进去 — 自动切片，存入本地向量库。</span><span class="en">Drag in PDFs, Excel, Markdown — auto-chunked into a local vector database.</span></p></div>
+    <div class="step"><b>2</b><h4><span class="zh">打开任意网页</span><span class="en">Open Any Webpage</span></h4><p><span class="zh">CRM、ERP、OA — 不用改造，AI Tip 侧边栏自动叠加在页面旁边。</span><span class="en">CRM, ERP, OA — no changes needed. AI Tip sidebar appears alongside the page.</span></p></div>
+    <div class="step"><b>3</b><h4><span class="zh">AI 自动识别表单</span><span class="en">AI Detects Form Fields</span></h4><p><span class="zh">扫描 DOM，提取所有输入框、下拉框、日期选择器 — 无需手动标注。</span><span class="en">Scans the DOM, extracts all inputs, selects, date pickers — no manual labeling.</span></p></div>
+    <div class="step"><b>4</b><h4><span class="zh">AI 检索 + 推荐</span><span class="en">AI Searches &amp; Suggests</span></h4><p><span class="zh">每个字段从你的文档中找答案，给出候选值、来源引用和置信度。</span><span class="en">For each field, finds answers in your documents — candidate values with source attribution and confidence.</span></p></div>
+    <div class="step"><b>5</b><h4><span class="zh">你审核，点确认</span><span class="en">You Review &amp; Confirm</span></h4><p><span class="zh">接受、修改、或跳过 — AI 建议，你决定。点一下填入表单。</span><span class="en">Accept, edit, or skip — AI suggests, you decide. One click fills the form.</span></p></div>
+  </div>
 </section>
 
-<!-- ── Footer ── -->
-<footer class="landing-footer">
-  AI Tip · Open Source · <a href="https://github.com">GitHub</a>
+<footer class="footer">
+  <div><span class="zh">AI Tip · 零集成 · 本地运行 · AI 帮你填表</span><span class="en">AI Tip · Zero Integration · Local-First · AI-Powered Form Filling</span></div>
+  <div class="footer-links">
+    <a href="https://github.com/ai-tip-dev/ai-tip">GitHub</a>
+    <a href="#demo">Demo</a>
+    <a href="test-form.html"><span class="zh">试用</span><span class="en">Try It</span></a>
+  </div>
 </footer>
 
+<script>
+if(localStorage.getItem('lang')==='en')document.documentElement.classList.add('en');
+</script>
 </body>
 </html>

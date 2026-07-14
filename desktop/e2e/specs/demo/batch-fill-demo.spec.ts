@@ -27,8 +27,7 @@ import {
 } from '../../helpers'
 
 const ELECTRON_ENTRY = resolve(__dirname, '..', '..', '..', 'out', 'main', 'index.js')
-const TEST_FORM_PATH = resolve(__dirname, '..', '..', 'fixtures', 'test-form.html')
-const TEST_FORM_URL = `file:///${TEST_FORM_PATH.replace(/\\/g, '/')}`
+const TEST_FORM_URL = 'https://ai-tip-dev.github.io/ai-tip/test-form.html'
 
 test.describe('Demo: Batch Fill', () => {
   let ctx: E2EContext
@@ -77,11 +76,23 @@ test.describe('Demo: Batch Fill', () => {
       { fieldKey: 'GDPR Consent',       suggestedValue: 'true',                        confidence: 'high',   reasoning: 'Consent form on file' },
     ])
 
-    // ── Step 3: Navigate to test form ──
-    await webview.goto(TEST_FORM_URL)
+    // ── Step 3: Navigate to test form via the app's URL bar ──
+    await ctx.page.evaluate((url: string) => {
+      localStorage.setItem('ai-sidebar-history', JSON.stringify({ lastUrl: url, recentUrls: [url] }))
+    }, TEST_FORM_URL)
+    const urlInput = ctx.page.locator('.url-input')
+    await urlInput.click()
+    await urlInput.fill(TEST_FORM_URL)
+    await urlInput.press('Enter')
+    // Assert the webview loaded the target URL.
+    await expect.poll(() =>
+      ctx.page.evaluate(() => {
+        const wv = document.querySelector('#main-webview') as any
+        return wv?.getURL?.() || ''
+      })
+    ).toBe(TEST_FORM_URL)
 
     // ── Step 4: Wait for page session init + summarizePage (setTimeout 2500ms after load) ──
-    await ctx.page.waitForTimeout(500)   // Brief pause — show loaded layout
 
     // ── Step 5: Click Overview ──
     await sidebar.ensureHome()
