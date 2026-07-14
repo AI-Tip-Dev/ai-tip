@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Customer Registration — AI Sidebar</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+    background:#f4f6f8;display:flex;justify-content:center;padding:48px 20px;color:#1a1d20;
+  }
+  .form-card{
+    background:#fff;border-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.06),0 8px 24px rgba(0,0,0,.04);
+    padding:48px 44px;width:100%;max-width:680px;border-top:3px solid #003d8f;
+  }
+  .form-card h1{font-size:22px;font-weight:700;margin-bottom:6px;color:#003d8f;letter-spacing:-.3px;}
+  .form-card>.subtitle{font-size:13px;color:#6c757d;margin-bottom:32px;}
+  .form-section{margin-bottom:28px;}
+  .form-section h2{
+    font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;
+    color:#003d8f;margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid #e8f0fe;
+  }
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:17px;margin-bottom:17px;}
+  .field-row.single{grid-template-columns:1fr;}
+  .field{display:flex;flex-direction:column;gap:4px;}
+  .field label{font-size:12.5px;font-weight:600;color:#343a40;}
+  .field label .required{color:#d32f2f;margin-left:2px;font-weight:700;}
+  .field input,.field select,.field textarea{
+    padding:10px 12px;border:1px solid #ced4da;border-radius:3px;
+    font-size:14px;font-family:inherit;color:#1a1d20;background:#fff;
+    transition:border-color .12s,box-shadow .12s;outline:none;width:100%;
+  }
+  .field input:focus,.field select:focus,.field textarea:focus{
+    border-color:#003d8f;box-shadow:0 0 0 3px rgba(0,61,143,.1);
+  }
+  .field input::placeholder,.field textarea::placeholder{color:#adb5bd;}
+  .field textarea{resize:vertical;min-height:76px;}
+  .field select{
+    cursor:pointer;appearance:none;
+    background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23343a40' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 12px center;
+    padding-right:38px;
+  }
+  .field input[type="date"]{cursor:pointer;}
+  .field .help-text{font-size:11px;color:#adb5bd;margin-top:3px;}
+  .checkbox-group{display:flex;align-items:center;gap:8px;padding:4px 0;}
+  .checkbox-group input[type="checkbox"]{width:18px;height:18px;accent-color:#003d8f;cursor:pointer;}
+  .checkbox-group label{font-size:14px;cursor:pointer;font-weight:400;}
+  .form-actions{
+    display:flex;gap:12px;justify-content:flex-end;margin-top:32px;
+    padding-top:20px;border-top:1px solid #e2e5e9;
+  }
+  .btn{
+    padding:10px 24px;border-radius:3px;font-size:13.5px;font-weight:600;
+    cursor:pointer;border:1px solid transparent;transition:all .12s;font-family:inherit;
+    text-transform:uppercase;letter-spacing:.3px;
+  }
+  .btn-primary{background:#003d8f;color:#fff;border-color:#003d8f;}
+  .btn-primary:hover{background:#002855;border-color:#002855;}
+  .btn-secondary{background:#fff;color:#343a40;border-color:#ced4da;}
+  .btn-secondary:hover{background:#f8f9fa;border-color:#adb5bd;}
+</style>
+</head>
+<body>
+<div class="form-card">
+  <h1>Customer Registration</h1>
+  <p class="subtitle">Complete all required fields. AI Sidebar can assist with auto-fill from your knowledge base.</p>
+
+  <div class="form-section">
+    <h2>Company Information</h2>
+    <div class="field-row">
+      <div class="field"><label for="company_name">Company Name <span class="required">*</span></label><input id="company_name" type="text" placeholder="e.g. Acme Corporation" /></div>
+      <div class="field"><label for="industry">Industry</label><select id="industry"><option value="">— Select —</option><option value="insurance">Insurance</option><option value="finance">Financial Services</option><option value="healthcare">Healthcare</option><option value="manufacturing">Manufacturing</option><option value="technology">Technology</option></select></div>
+    </div>
+    <div class="field-row single">
+      <div class="field"><label for="company_address">Registered Address</label><input id="company_address" type="text" placeholder="Street, City, Postcode, Country" /></div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <h2>Primary Contact</h2>
+    <div class="field-row">
+      <div class="field"><label for="first_name">First Name <span class="required">*</span></label><input id="first_name" type="text" placeholder="e.g. Thomas" /></div>
+      <div class="field"><label for="last_name">Last Name <span class="required">*</span></label><input id="last_name" type="text" placeholder="e.g. Müller" /></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label for="email">Email Address <span class="required">*</span></label><input id="email" type="email" placeholder="thomas.mueller@company.com" /></div>
+      <div class="field"><label for="phone">Phone Number</label><input id="phone" type="tel" placeholder="+41 44 123 45 67" /></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label for="job_title">Job Title</label><input id="job_title" type="text" placeholder="e.g. Chief Risk Officer" /></div>
+      <div class="field"><label for="department">Department</label><select id="department"><option value="">— Select —</option><option value="underwriting">Underwriting</option><option value="claims">Claims</option><option value="risk">Risk Management</option><option value="compliance">Compliance</option><option value="finance">Finance</option></select></div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <h2>Policy Details</h2>
+    <div class="field-row">
+      <div class="field"><label for="policy_number">Policy Number <span class="required">*</span></label><input id="policy_number" type="text" placeholder="e.g. ZUR-2025-00421" /></div>
+      <div class="field"><label for="sum_insured">Sum Insured (CHF)</label><input id="sum_insured" type="text" placeholder="e.g. 1,500,000" /></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label for="start_date">Coverage Start</label><input id="start_date" type="date" /></div>
+      <div class="field"><label for="end_date">Coverage End</label><input id="end_date" type="date" /></div>
+    </div>
+    <div class="field-row single">
+      <div class="field"><label for="notes">Special Conditions</label><textarea id="notes" placeholder="Any special terms, exclusions, or conditions..."></textarea><span class="help-text">Internal use only — not visible to the policyholder</span></div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <h2>Processing</h2>
+    <div class="field-row">
+      <div class="field"><label for="priority">Priority</label><select id="priority"><option value="">— Select —</option><option value="urgent">Urgent</option><option value="high">High</option><option value="normal">Normal</option><option value="low">Low</option></select></div>
+      <div class="field"><label for="language">Correspondence Language</label><select id="language"><option value="en">English</option><option value="de">Deutsch</option><option value="fr">Français</option><option value="it">Italiano</option></select></div>
+    </div>
+    <div class="field-row single">
+      <div class="field"><div class="checkbox-group"><input id="gdpr_consent" type="checkbox" /><label for="gdpr_consent">Data processing consent obtained (GDPR / FADP)</label></div></div>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button class="btn btn-secondary" type="button">Reset</button>
+    <button class="btn btn-primary" type="submit">Submit Registration</button>
+  </div>
+</div>
+</body>
+</html>

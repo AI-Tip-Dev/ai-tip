@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI Tip — Intelligent Form Filling, Powered by Your Documents</title>
+<meta name="description" content="Open any web page, let AI analyze the form, search your private knowledge base, and suggest values — all locally, no data leaves your machine." />
+<link rel="stylesheet" href="css/style.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<!-- ── Nav ── -->
+<nav class="landing-nav">
+  <div class="nav-brand">
+    <span class="brand-emoji">🤖</span>
+    AI Tip
+  </div>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#how-it-works">How It Works</a>
+    <a href="#demo">Demo</a>
+    <a href="#architecture">Architecture</a>
+    <a href="test-form.html" class="btn-primary">📝 Try Demo Form</a>
+  </div>
+</nav>
+
+<!-- ── Hero ── -->
+<section class="hero">
+  <div class="hero-badge">🔬 Open Source · Local-First · Privacy Preserving</div>
+  <h1>Fill Any Web Form <span>with AI</span>,<br>Powered by Your Own Documents</h1>
+  <p>
+    AI Tip reads your contracts, spreadsheets, and notes — then intelligently fills
+    web forms for you. Everything runs locally. Your data never leaves your machine.
+  </p>
+  <div class="hero-actions">
+    <a href="#how-it-works" class="btn-primary">See How It Works</a>
+    <a href="https://github.com" class="btn-outline">View on GitHub</a>
+  </div>
+</section>
+
+<!-- ── Value Flow ── -->
+<div class="value-flow">
+  <div class="flow-step"><span class="step-icon">📄</span> Your Documents</div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-step"><span class="step-icon">🧠</span> Local Vector DB</div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-step"><span class="step-icon">🔍</span> AI Detects Form</div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-step"><span class="step-icon">🤖</span> LLM Suggests Values</div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-step"><span class="step-icon">✅</span> You Confirm &amp; Fill</div>
+</div>
+
+<!-- ── Features ── -->
+<section class="section" id="features">
+  <div class="section-header">
+    <h2>Why AI Tip?</h2>
+    <p>Existing tools can't read your private documents or work on arbitrary websites. We can.</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="card-icon">🌐</div>
+      <h3>Works on Any Website</h3>
+      <p>Not tied to specific platforms like Salesforce. AI Tip detects forms on any web page — CRM, ERP, government portals, internal tools.</p>
+    </div>
+    <div class="feature-card">
+      <div class="card-icon">🔒</div>
+      <h3>100% Local &amp; Private</h3>
+      <p>All document processing and AI inference happens on your machine. No cloud uploads, no third-party access to your sensitive data.</p>
+    </div>
+    <div class="feature-card">
+      <div class="card-icon">📚</div>
+      <h3>Understands Your Documents</h3>
+      <p>Upload PDFs, Excel sheets, Markdown notes — AI Tip indexes them into a local vector database and retrieves relevant context for each form field.</p>
+    </div>
+    <div class="feature-card">
+      <div class="card-icon">🧠</div>
+      <h3>AI Agent Decision-Making</h3>
+      <p>Not just keyword matching. The LLM reasons about which document fragment applies to which field, and explains its confidence level.</p>
+    </div>
+    <div class="feature-card">
+      <div class="card-icon">✅</div>
+      <h3>Human-in-the-Loop</h3>
+      <p>AI suggests — you decide. Review every suggestion, see the source document, and accept, edit, or reject before anything gets filled.</p>
+    </div>
+    <div class="feature-card">
+      <div class="card-icon">⚡</div>
+      <h3>Batch Fill</h3>
+      <p>Fill all 15+ fields at once. Review results in a summary card, then confirm individually or in bulk. Save minutes on every form.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── How It Works ── -->
+<section class="section" id="how-it-works">
+  <div class="section-header">
+    <h2>How It Works</h2>
+    <p>From document to filled form — in 5 steps</p>
+  </div>
+  <div class="steps-list">
+    <div class="step-item">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h4>Upload Your Documents</h4>
+        <p>Drag &amp; drop PDFs, Excel files, or Markdown notes. AI Tip chunks and embeds them into a local LanceDB vector store.</p>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h4>Open Any Web Form</h4>
+        <p>Navigate to your CRM, insurance portal, or any web page with a form. AI Tip's sidebar opens alongside.</p>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h4>AI Detects Form Fields</h4>
+        <p>The form detection engine scans the DOM and extracts all input fields — text, selects, checkboxes, date pickers, and more.</p>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h4>LLM Reasons &amp; Suggests</h4>
+        <p>For each field, the LLM searches your knowledge base, retrieves the most relevant document chunks, and generates a suggested value with source attribution and confidence score.</p>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <h4>You Review &amp; Confirm</h4>
+        <p>See every suggestion with its source and confidence. Accept, edit, or skip — then the value is written to the form.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Demo Videos ── -->
+<section class="section" id="demo">
+  <div class="section-header">
+    <h2>See It In Action</h2>
+    <p>Real e2e test recordings — AI Tip filling a Customer Registration form</p>
+  </div>
+  <div class="demo-videos">
+    <div class="demo-video-card">
+      <video controls muted loop poster=""
+             title="AI Tip — Single Field Fill Demo">
+        <source src="videos/fill-form-demo.webm" type="video/webm" />
+      </video>
+      <div class="vc-label">
+        <h4>✨ Single Field Fill</h4>
+        <p>Click a field → AI analyzes your documents → suggests a value with source &amp; confidence → you accept → filled!</p>
+      </div>
+    </div>
+    <div class="demo-video-card">
+      <video controls muted loop poster=""
+             title="AI Tip — Batch Fill Demo">
+        <source src="videos/batch-fill-demo.webm" type="video/webm" />
+      </video>
+      <div class="vc-label">
+        <h4>⚡ Batch Fill All Fields</h4>
+        <p>AI analyzes 15+ fields at once, retrieves values from contracts &amp; spreadsheets, and fills the entire form in seconds.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Architecture ── -->
+<section class="section" id="architecture">
+  <div class="section-header">
+    <h2>Architecture</h2>
+    <p>Electron desktop app + modular packages</p>
+  </div>
+  <div class="arch-diagram">
+    <div class="arch-row">
+      <div class="arch-box web">🌐 Web Page (CDP)</div>
+      <span style="font-size:18px">↔</span>
+      <div class="arch-box detect">🔍 Form Detection</div>
+      <span style="font-size:18px">→</span>
+      <div class="arch-box ai">🤖 AI Agent (LLM)</div>
+    </div>
+    <div class="arch-row">
+      <div class="arch-box kb">📚 LanceDB Vector Store</div>
+      <span style="font-size:18px">↔</span>
+      <div class="arch-box ai">🤖 LLM Providers (10+)</div>
+      <span style="font-size:18px">→</span>
+      <div class="arch-box fill">✅ Fill Form</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<section class="cta-section">
+  <h2>Try It Yourself</h2>
+  <p>Open the demo form in AI Tip and see AI-powered auto-fill in action — from your own documents.</p>
+  <a href="test-form.html" class="btn-primary">📝 Open Demo Form →</a>
+</section>
+
+<!-- ── Footer ── -->
+<footer class="landing-footer">
+  AI Tip · Open Source · <a href="https://github.com">GitHub</a>
+</footer>
+
+</body>
+</html>
